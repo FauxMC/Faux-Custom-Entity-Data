@@ -28,7 +28,7 @@ public class MixinServerPlayer implements IPersistentDataHolder {
             lifetimeData.put(PersistentEntityDataConstants.PERSISTENT_NBT_KEY, tag);
             return tag;
         }
-        return lifetimeData.getCompound(PersistentEntityDataConstants.PERSISTENT_NBT_KEY);
+        return lifetimeData.getCompoundOrEmpty(PersistentEntityDataConstants.PERSISTENT_NBT_KEY);
     }
 
     @Override

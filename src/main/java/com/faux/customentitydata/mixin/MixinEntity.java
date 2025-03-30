@@ -39,9 +39,7 @@ public abstract class MixinEntity implements ICustomDataHolder {
 
     @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.BEFORE))
     public void load(CompoundTag compoundTag, CallbackInfo ci) {
-        if (compoundTag.contains(PersistentEntityDataConstants.CUSTOM_NBT_KEY, Tag.TAG_COMPOUND)) {
-            faux$setCustomData(compoundTag.getCompound(PersistentEntityDataConstants.CUSTOM_NBT_KEY));
-        }
+        compoundTag.getCompound(PersistentEntityDataConstants.CUSTOM_NBT_KEY).ifPresent(this::faux$setCustomData);
     }
 
 }
