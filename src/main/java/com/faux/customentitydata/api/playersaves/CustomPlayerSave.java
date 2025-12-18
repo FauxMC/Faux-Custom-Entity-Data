@@ -1,15 +1,14 @@
 package com.faux.customentitydata.api.playersaves;
 
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,14 +40,14 @@ public abstract class CustomPlayerSave implements IPlayerSaveListener, IPlayerLo
      * An identifier used when reading and writing custom player data. The ID is incorporated into the save filepath to
      * prevent reduce the likelihood of conflicting entries.
      */
-    private final ResourceLocation handlerId;
+    private final Identifier handlerId;
 
     /**
      * A logger instance used to track warnings and debug information about the save data.
      */
     private final Logger log;
 
-    public CustomPlayerSave(ResourceLocation handlerId) {
+    public CustomPlayerSave(Identifier handlerId) {
 
         this.handlerId = handlerId;
         this.log = LoggerFactory.getLogger(handlerId.toString());
@@ -84,7 +83,7 @@ public abstract class CustomPlayerSave implements IPlayerSaveListener, IPlayerLo
         try {
 
             final Path targetSave = customSaveDir.resolve(player.getStringUUID() + ".dat");
-            if(Files.exists(targetSave) && Files.isRegularFile(targetSave)) {
+            if (Files.exists(targetSave) && Files.isRegularFile(targetSave)) {
                 data = NbtIo.readCompressed(targetSave, NbtAccounter.unlimitedHeap());
             }
         } catch (IOException e) {
@@ -113,7 +112,7 @@ public abstract class CustomPlayerSave implements IPlayerSaveListener, IPlayerLo
             final Path customSaveDir = getCustomSaveDir(saveDir);
 
             // Write save data to a temporary location.
-            final Path tempSave = Files.createTempFile(customSaveDir,player.getStringUUID() + "-", ".dat");
+            final Path tempSave = Files.createTempFile(customSaveDir, player.getStringUUID() + "-", ".dat");
             NbtIo.writeCompressed(this.savePlayer(player), tempSave);
 
             // Backup existing save and overwrite with new data.

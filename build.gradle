@@ -1,15 +1,13 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'maven-publish'
     id 'net.darkhax.curseforgegradle' version '1.0.11'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
-
-archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
-
+base {
+    archivesName = "${mod_name}-fabric-${minecraft_version}"
+}
 apply from: 'gradle/property_loader.gradle'
 apply from: 'gradle/build_number.gradle'
 apply from: 'gradle/git_changelog.gradle'
@@ -47,7 +45,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            artifactId project.archivesBaseName
+            artifactId base.archivesName.get()
             version project.version
             from components.java
         }
@@ -66,7 +64,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 
     apiToken = System.getenv("CURSEFORGE_API_TOKEN")
 
-    def mainFile = upload(575305, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    def mainFile = upload(575305, file("${project.buildDir}/libs/${base.archivesName.get()}-${version}.jar"))
     mainFile.changelog = project.ext.mod_changelog
     mainFile.releaseType = 'release'
     mainFile.changelogType = 'markdown'
