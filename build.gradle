@@ -60,7 +60,7 @@ publishing {
 }
 
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-
+    dependsOn(tasks.jar)
     description = 'Publishes the build to CurseForge.'
 
     apiToken = System.getenv("CURSEFORGE_API_TOKEN")
@@ -71,8 +71,6 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     }.get()
     mainFile.releaseType = 'release'
     mainFile.changelogType = 'markdown'
-    def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
-    def javadocFile = mainFile.withAdditionalFile(javadocJar)
 }
 
 modrinth {
