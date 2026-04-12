@@ -3,7 +3,7 @@
 pipeline {
     agent any
     tools {
-        jdk "jdk-21"
+        jdk "jdk-25"
     }
     environment {
         MODRINTH_API_TOKEN     = credentials('jared-modrinth-token')
@@ -38,12 +38,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-    post {
-        always {
-            archive 'build/libs/**.jar'
-            archive 'changelog.md'
         }
     }
 }
