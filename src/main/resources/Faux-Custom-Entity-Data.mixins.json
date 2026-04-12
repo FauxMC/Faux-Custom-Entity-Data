@@ -4,10 +4,7 @@
   "package": "com.faux.customentitydata.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AccessorPlayerDataStorage",
     "MixinEntity",
-    "MixinPlayerDataStorage",
-    "MixinPlayerList",
     "MixinServerPlayer"
   ],
   "client": [

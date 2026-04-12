@@ -1,15 +1,18 @@
+import com.blamejared.gradle.mod.utils.GMUtils
+import com.blamejared.gradle.mod.utils.values.GitChangelogValue
 plugins {
-    id 'fabric-loom' version '1.14-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
-    id 'net.darkhax.curseforgegradle' version '1.0.11'
+    id 'net.darkhax.curseforgegradle' version '1.1.28'
     id "com.modrinth.minotaur" version "2.+"
+    id "com.blamejared.gradle-mod-utils" version "1.0.5"
 }
 
 base {
     archivesName = "${mod_name}-fabric-${minecraft_version}"
 }
+version = GMUtils.updatingVersion(version as String)
 apply from: 'gradle/property_loader.gradle'
-apply from: 'gradle/build_number.gradle'
 apply from: 'gradle/git_changelog.gradle'
 
 repositories {
@@ -17,9 +20,8 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 }
 
 processResources {
@@ -73,12 +75,17 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 }
 
 modrinth {
-    token = System.getenv("MODRINTH_API_TOKEN")
-    projectId = "E7ZFR7qk"
-    versionNumber = "${version}"
-    versionType = "release"
-    uploadFile = remapJar
+    token.set(GMUtils.locateProperty(project, 'MODRINTH_API_TOKEN'))
+    projectId.set("E7ZFR7qk")
+    changelog.set(providers.of(GitChangelogValue) {
+        parameters.repository.set(mod_source)
+    }.get())
+    versionName.set("Fabric-${minecraft_version}-$version")
+    versionType.set('release')
+    gameVersions.set([minecraft_version])
+    uploadFile.set(tasks.jar)
     dependencies {
-        required.project "fabric-api"
+        required.project('fabric-api')
     }
 }
+tasks.modrinth.dependsOn(tasks.jar)

@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinServerPlayer implements IPersistentDataHolder {
 
     @Inject(method = "restoreFrom", at = @At("TAIL"))
-    public void restoreFrom(ServerPlayer other, boolean keepEverything, CallbackInfo ci) {
+    public void restoreFrom(ServerPlayer oldPlayer, boolean restoreAll, CallbackInfo ci) {
 
-        IPersistentDataHolder oldHolder = (IPersistentDataHolder) other;
+        IPersistentDataHolder oldHolder = (IPersistentDataHolder) oldPlayer;
         this.faux$setPersistentData(oldHolder.faux$getPersistentData());
     }
 

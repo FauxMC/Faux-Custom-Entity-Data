@@ -32,13 +32,13 @@ public abstract class MixinEntity implements ICustomDataHolder {
     }
 
     @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V", shift = At.Shift.BEFORE))
-    public void saveWithoutId(ValueOutput valueOutput, CallbackInfo ci) {
-        valueOutput.store(PersistentEntityDataConstants.CUSTOM_NBT_KEY, CompoundTag.CODEC, faux$getCustomData());
+    public void saveWithoutId(ValueOutput output, CallbackInfo ci) {
+        output.store(PersistentEntityDataConstants.CUSTOM_NBT_KEY, CompoundTag.CODEC, faux$getCustomData());
     }
 
     @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V", shift = At.Shift.BEFORE))
-    public void load(ValueInput valueInput, CallbackInfo ci) {
-        valueInput.read(PersistentEntityDataConstants.CUSTOM_NBT_KEY, CompoundTag.CODEC).ifPresent(this::faux$setCustomData);
+    public void load(ValueInput input, CallbackInfo ci) {
+        input.read(PersistentEntityDataConstants.CUSTOM_NBT_KEY, CompoundTag.CODEC).ifPresent(this::faux$setCustomData);
     }
 
 }
