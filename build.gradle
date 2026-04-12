@@ -13,7 +13,6 @@ base {
 }
 version = GMUtils.updatingVersion(version as String)
 apply from: 'gradle/property_loader.gradle'
-apply from: 'gradle/git_changelog.gradle'
 
 repositories {
 }
@@ -67,7 +66,9 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     apiToken = System.getenv("CURSEFORGE_API_TOKEN")
 
     def mainFile = upload(575305, file("${project.buildDir}/libs/${base.archivesName.get()}-${version}.jar"))
-    mainFile.changelog = project.ext.mod_changelog
+    mainFile.changelog = providers.of(GitChangelogValue) {
+        parameters.repository.set(mod_source)
+    }.get()
     mainFile.releaseType = 'release'
     mainFile.changelogType = 'markdown'
     def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
