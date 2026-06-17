@@ -1,7 +1,7 @@
 import com.blamejared.gradle.mod.utils.GMUtils
 import com.blamejared.gradle.mod.utils.values.GitChangelogValue
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.16.3'
     id 'maven-publish'
     id 'net.darkhax.curseforgegradle' version '1.1.28'
     id "com.modrinth.minotaur" version "2.+"
